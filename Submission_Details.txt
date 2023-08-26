@@ -1,0 +1,166 @@
+Game Title: Bad Apple
+Created By: Eric Yelong Tabuchi (EYT)
+
+Game Controls
+	* Game uses only the player0 joystick
+	* Left and right motions move player left and right
+	* Game boots up to idle state so you must press fire / trigger to start it
+	* At any point, player can use the reset switch to reset game back to idle state
+	* Using select switch on idle state, you can change the current game mode to slightly alter 
+	  the experience
+	 
+Game Mode Variations
+0: Basket and apples are both wide sprites, making it easy to catch apples
+1: Apples begin to fall immediately after one is caught
+2: Basket and apples have reduced width, making the player need to be more precise
+3: There are now triple the number of baskets and apples
+4: Combines Game Modes 1 and 2
+5: Combines Game Modes 1 and 3
+
+Game Requirements (From Rubric)
+1. Needs to be one OR two player
+	* Game is single player game
+2. Needs to use background and playfield graphics registers
+	* Background and playfield graphics used to create tree, sky, and grass
+3. Needs to use sprites and sprite movement
+	* Uses player0 sprite for player (basket)
+	* Uses player1 sprite for falling apples and all numbers displayed (score and game mode number)
+	* Apples move vertically downward
+	* Player basket moves left and right with joystick0 
+	* Joystick0 trigger button used to start game
+4. Should make some use of ball OR missile graphics
+	* Missile0 and Missile1 graphics used to create apples on top of tree
+5. Player should be able to reset game using console reset switch
+	* Pressing reset switch sends player to idle state (reseting the game)
+6. Game should boot to idle state
+	* Game starts in idle state where player must press joystick0 trigger button to start
+	* Waiting slightly over 1 minute causes a screesaver state to occur where every color on-screen shifts roughly every 2 seconds
+7. Should have sound of some kind
+	* Collecting apples play a short sound effect
+	* Getting a game over plays a sound effect
+	* During the screensaver state, music plays to signify you are in the screensaver state
+8. Should record score or player performance
+	* Score is recorded as a 2-digit number that increments every time an apple is collected 
+
+Game Concept
+The player assumes the role of a straw basket trying to grab as many apples as possible until
+they miss, causing one to hit the ground. The game takes place in what is to be presumed as an apple orchard as apples fall from the tops of apple trees. The manual for the game goes into
+greater and more specific detail behind the backstory and reasoning behind a self-moving basket
+needing to catch falling apples.
+
+Visual Style
+The goal in creating this game was to make something that looked and played simple while also 
+reflecting the time period. It was noticeable in several Atari 2600 titles like Pacman or Yar's 
+Revenge that the goal was getting a higher score which was also the main motivation to have 
+players continue playing. I wanted the visual style of my game to look easy to digest and 
+comprehend while also explaining the game's concept. The scenery consists of a series of trees 
+taking up most of the screen with green grass and a light blue sky to signify the daytime nature 
+setting. To prevent the trees from looking too blocky, I utilized the playfield registers to 
+represent leaves at varying heights so that each tree was not completely identical. This was also
+done to the width of the trees to ensure that the trees did not feel copied and pasted. To make it
+seem reasonable that the apples should be falling from the trees, I used the missile graphics to add
+apples at the top of the tree to explain to the player that these trees are in fact apple trees.
+Similarly, this philosophy was then applied to the basket by adding a handle to the top to better
+represent the player as a container rather than just a rectangle.
+
+Design Style
+Since the goal of the game is to grab as many apples, I wanted the act of getting an apple to always
+seem possible in order to make the player understand that they could have gotten the apple if they
+had made a better decision at the time. By default, when the player reaches one end of the screen,
+their sprite will wrap around to the other side. Instead of adding invisible walls to prevent the 
+player from doing that, I decided to was best to keep in on the chance that an apple spawns on the 
+opposite side the player is at to ensure they have a higher chance of collecting it. That way, the
+player will have to make the decision (and also have the decision) of heading towards the falling 
+apple or wrap around to the other side (which could cost them the game if they make the wrong 
+decision). 
+
+Audio Design
+Regarding the sound effects that play in the game, I made it so that the sound that plays when you
+collect an apple sounded lighter compared to if you fail to catch one and get a game over. That way,
+the lighter sound makes it feel like you are ensuring the apple's safety since it is in the basket.
+With the heavier sound playing on a gameover, it's almost as if the apple has impacted with the 
+ground, causing a loud thud while also being an equivalent representation of the player's blunder
+in failing to catch that apple. The music that plays during the screensaver is part of a song called
+Bad Apple and was chosen as a fun reference (since it matched the title of the game) for the 
+developer while also being an upbeat tune to listen to if the player ends up stumbling upon and 
+realizing there was a screensaver mode.
+
+Game Difficulty and Fun Factor
+In terms of making the game fun and challenging, those stipulations felt the most arduous to obtain
+given that both feelings are subjective. When designing the game, I considered fun and challenging
+to mean captivating with escalating difficulty. For all game modes, apples will slowly fall towards
+the ground. As the player reaches specific thresholds in apples, apples will start to fall faster.
+For example, reaching a score of 5 causes the first speedup to occur. That way, regardless of 
+game mode, the game will increase in difficulty to a point where some players may have a hard time
+surviving in. That offers replayability as the goal is to get a higher score or simply to survive
+for a long time which could be something people can compete in (so that multiple people can find
+use for this singleplayer game). The fun from playing the game comes from a similar feeling one
+may feel when playing a mobile game today in which the main objective of catching falling apples
+can be hypnotic and seem interesting. Combined with an increasing difficulty, once the speed of
+the apples reaches a specific point, it could be considered more fun to players of a higher skill
+level as they might find the increasing challenge enjoyable.
+
+Atari Constraints
+The constraints of the Atari's hardware was very noticeable during development and affected how
+certain elements were put together. For example, the placement of the score and game mode number
+were originally going to be at the top of the screen (this was before apples were placed there
+using the missiles). However, the horizontal position of the apples were "randomly" changed by
+strobing RESP1 which would cause the score to move around since they were also made with player1
+sprites. As a result, my workaround was to place the numbers on the bottom scanlines instead and
+have RESP1 be strobed in overscan so that only the apples reset their position. Since I used 
+the HMP0 and HMOVE to move the player0 sprite, it meant that I could only use the player0 sprite
+for just the basket as every other usage of the sprite in other scan lines would result in those
+sprites moving along with the player. This meant that I would need to look towards whatever 
+resources were left to produce the remaining aspects of the game. For the score, I went with
+creating number sprites that were three pixels / bits long so that the player1 sprite could consist
+of a 2 digit number as the previous limitation meant I couldn't have the score be of both player 
+sprites. Similarly, creating the title went through the same process as I went from thinking about
+having each player sprite consisting of a chunk of letters to spell it out before I went with
+using playfield graphics to visualize the title while also ensuring the timing was done such that
+the specific registers would not repeat on the other half of the screen. Regarding gameplay 
+constraints, I wanted there to be points in the game where apples would fall faster as the player
+reached certain milestones in the game like collecting 20 apples. However, decrementing the 
+y-position of the apples proved too fast for the game to comprehend as collision could not be
+registered effectively. My solution would be to implement two forms of speedup: where the decrement
+occurs every X frames where X is an initialized value that decrements over the course of the game 
+and adding a delay between subsequent apples spawning (which is part of the reason why some of the
+game modes have a zero delay and is treated as falling faster in the manual). There was
+also work and help needed to have the proper number of scan lines as collision needed to be done
+between apples and the basket, meaning both should be occupying the same set of scan lines. This
+meant that timing had to be done to ensure there was enough time to draw both sprites while also
+not adding extra scan lines in the process. The main constraint that had to be considered as it was
+a main feature of the game was creating a pseudo RNG system that would "randomly" waste time to
+strobe RESP1 to change the positioning of apples. I made use of creating a random seed variable
+based on whatever value a RAM variable had during the game (this variable increments every frame)
+and then proceed to waste time based on the random seed. This random seed would then receive a 
+new value every time the apple has to be respawned to the top of the tree. Though it does give the
+illusion of an RNG spawning system, it is not perfect as at times the positioning of future apples
+either does not change for a while or alternates between two locations for a bit. I did find it 
+interesting and took advantage of the resulting situation (or placebo) in which increasing the
+speed of apples consequently resulted in changing the random seed faster which meant more randomness
+in the spawning as the game progressed and apple speed increased.
+
+Game Packaging
+I created the a mockup of an Atari cartridge label and a short manual in order to package my game.
+To create the art for displaying my game, I decided to go for a more simplistic style as I lack
+the artistic capabilities of recreating some of the more artistically impressive pieces from the 
+time period. When designing the logo / box art for my game, I was inspired by the way Activision
+created their art which aimed for a more simplistic yet accurate rendition of the game. In 
+particular, I was inspired by Activision's Chopper Command whose art felt like a recreated 
+screenshot from the game with noticeable outlines to differentiate objects and speed lines to 
+indicate how those objects will move. For my art, I took a gameplay screenshot and went into 
+Photoshop to add black outlines around everything and speed lines for the basket and the falling
+apple to convey how the apple falls downward and the basket moves horizontally towards the apple
+in hopes of catching it. Furthermore, I noticed the labels themselves to be mostly rounded 
+rectangles and made sure mine were so as well. For the manual, I based it off of the manual for
+Adventure and even copied the dividers for the different headings and some of the text used in the
+manual when it came to aspects of the hardware itself (such as having the system off when inserting
+the game and how to plug in the controller). The cover for the manual is based off of an Activision
+manual I saw that had text at the bottom informing the player that they could learn as the play
+but could read the manual in case they get stuck (making it not seem mandatory to use the manual).
+In following how the Adventure manual was written, I made sure to contextualize the instructions to
+make sense with the narrative I wanted to tell for the game and made each aspect of the game make
+sense in the context of the story. For example, the Adventure manual treats resetting the game as
+the player reincarnating so I made my manual treat resetting or restarting after a game over as the
+player time traveling which then lead into making it easier to explain how the different game modes
+made sense in the story (as variations from constantly time traveling). 
